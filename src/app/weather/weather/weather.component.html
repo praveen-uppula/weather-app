@@ -1,0 +1,87 @@
+<div class="container search">
+  <mat-card class="example-card">
+    <mat-card-header>
+      <mat-card-title>Weather</mat-card-title>
+      <mat-card-subtitle>In your city.</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="city-dropdown">
+        <mat-form-field appearance="fill">
+          <mat-label>Select City</mat-label>
+          <mat-select [formControl]="cityFormControl">
+            <mat-option *ngFor="let city of cities" [value]="city.value">
+              {{city.viewValue}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-spinner *ngIf="isFetching" [diameter]="40"></mat-spinner>
+      </div>
+
+    </mat-card-content>
+  </mat-card>
+</div>
+
+<div *ngIf="weatherData" class="container summary">
+  <mat-spinner *ngIf="isForecasting" [diameter]="40"></mat-spinner>
+  <mat-card class="example-card">
+    <mat-card-content>
+      <mat-grid-list cols="4" rowHeight="100px">
+        <mat-grid-tile [colspan]="3" [rowspan]="1" [style.background]="'lightblue'" (click)="forecast()"
+          style="cursor: pointer;">
+          <div class="avg-temp">
+            Average Temperature: <b>{{weatherData.main.temp}}</b>&nbsp;<small><i>Fahrenheit</i></small>
+          </div>
+        </mat-grid-tile>
+        <mat-grid-tile [colspan]="1" [rowspan]="2">
+          <div class="descripton">
+            <div class="icon">
+              <img class="weather-icon" [src]="'http://openweathermap.org/img/w/01d.png'" alt="Weather icon">
+            </div>
+            <div class="details">
+              {{weatherData.weather[0].description | titlecase}}
+            </div>
+          </div>
+        </mat-grid-tile>
+        <mat-grid-tile [colspan]="1" [rowspan]="1" [style.background]="'lightpink'" (click)="forecast()"
+          style="cursor: pointer;">
+          Wind Strength: <b>{{weatherData.wind.speed}}</b>&nbsp;<small><i>meter/sec</i></small>
+        </mat-grid-tile>
+        <mat-grid-tile [colspan]="2" [rowspan]="1" [style.background]="'lightyellow'">
+          Visibility: <b>{{weatherData.visibility}}</b>&nbsp;<small><i>meter</i></small>
+        </mat-grid-tile>
+      </mat-grid-list>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+<div *ngIf="foreCastData" class="container forecast">
+  <mat-card class="example-card">
+    <mat-card-content>
+      <mat-grid-list cols="2">
+        <mat-grid-tile [colspan]="1" [rowspan]="1" [style.background]="'lightblue'">
+          <mat-list>
+            <mat-list-item>
+              <b>Temperature forecast for next few hours (in <sup>o</sup>F):</b>
+            </mat-list-item>
+            <mat-divider></mat-divider>
+            <mat-list-item *ngFor="let data of foreCastData.list.slice(0, 8)">
+              {{data.main.temp}}
+            </mat-list-item>
+          </mat-list>
+        </mat-grid-tile>
+
+        <mat-grid-tile [colspan]="1" [rowspan]="1" [style.background]="'lightpink'">
+          <mat-list>
+            <mat-list-item>
+              <b>Wind Strength for next few hours (in meters):</b>
+            </mat-list-item>
+            <mat-divider></mat-divider>
+            <mat-list-item *ngFor="let data of foreCastData.list.slice(0, 8)">
+              {{data.wind.speed}}
+            </mat-list-item>
+          </mat-list>
+        </mat-grid-tile>
+      </mat-grid-list>
+    </mat-card-content>
+  </mat-card>
+</div>
