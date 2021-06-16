@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import {
   distinctUntilChanged,
   switchMap,
@@ -34,15 +34,21 @@ export class WeatherComponent implements OnInit, OnDestroy {
 
   public isForecasting = false;
 
+  public currentWeather: Observable<WeatherResponse> = this.cityFormControl
+    .valueChanges.pipe(
+      tap(() => this.isFetching = true),
+      distinctUntilChanged(),
+      switchMap((selectedCity: string) => this.weatherService.currentWeather(selectedCity))
+    );
+
   constructor(private weatherService: WeatherService) { }
 
   ngOnInit(): void {
-    this.cityFCSub = this.cityFormControl
-      .valueChanges.pipe(
-        tap(() => this.isFetching = true),
-        distinctUntilChanged(),
-        switchMap((selectedCity: string) => this.weatherService.currentWeather(selectedCity))
-      )
+    this.present();
+  }
+
+  public present() {
+    this.cityFCSub = this.currentWeather
       .subscribe(wd => {
         this.weatherData = wd;
         this.isFetching = false;

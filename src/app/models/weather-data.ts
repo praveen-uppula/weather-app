@@ -15,8 +15,8 @@ export interface WeatherResponse {
 }
 
 export interface Coord {
-  lon: string;
-  lat: string;
+  lon: string | number;
+  lat: string | number;
 }
 
 interface Weather {
@@ -38,7 +38,7 @@ interface Main {
 interface Wind {
   speed: number
   deg: number;
-  gust: number;
+  gust?: number;
 }
 
 interface Clouds {
